@@ -1,0 +1,220 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RoleName {
+  ADMIN
+  CUSTOMER
+}
+
+enum DrawingType {
+  PORTRAIT
+  ANIMAL
+  PAYSAGE
+  MANGA
+  AUTRE
+}
+
+enum DrawingFormat {
+  A5
+  A4
+  A3
+  CUSTOM
+}
+
+enum ProductSupport {
+  PAPIER_CLASSIQUE
+  PAPIER_PREMIUM
+  TOILE
+  POSTER
+  NUMERIQUE_HD
+}
+
+enum OrderStatus {
+  PENDING
+  IN_PROGRESS
+  CLIENT_REVIEW
+  SHIPPED
+  COMPLETED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+model Role {
+  id        String   @id @default(cuid())
+  name      RoleName @unique
+  users     User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String?
+  image        String?
+  roleId       String
+  role         Role      @relation(fields: [roleId], references: [id])
+  orders       Order[]
+  reviews      Review[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Category {
+  id           String         @id @default(cuid())
+  name         String
+  slug         String         @unique
+  description  String?
+  artworks     Artwork[]
+  products     Product[]
+  galleryImages GalleryImage[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model Artwork {
+  id          String         @id @default(cuid())
+  title       String
+  slug        String         @unique
+  description String?
+  coverImage  String
+  tags        String[]
+  featured    Boolean        @default(false)
+  categoryId  String
+  category    Category       @relation(fields: [categoryId], references: [id])
+  gallery     GalleryImage[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model Product {
+  id          String         @id @default(cuid())
+  name        String
+  slug        String         @unique
+  description String
+  imageUrl    String
+  price       Decimal        @db.Decimal(10, 2)
+  support     ProductSupport
+  active      Boolean        @default(true)
+  categoryId  String
+  category    Category       @relation(fields: [categoryId], references: [id])
+  orderItems  OrderItem[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model PricingRule {
+  id               String         @id @default(cuid())
+  name             String
+  format           DrawingFormat
+  support          ProductSupport
+  basePrice        Decimal        @db.Decimal(10, 2)
+  extraPersonPrice Decimal        @db.Decimal(10, 2)
+  rushFee          Decimal        @db.Decimal(10, 2)
+  active           Boolean        @default(true)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+model Order {
+  id                String        @id @default(cuid())
+  number            String        @unique
+  customerId        String?
+  customer          User?         @relation(fields: [customerId], references: [id])
+  total             Decimal       @db.Decimal(10, 2)
+  shippingFee       Decimal       @default(0) @db.Decimal(10, 2)
+  status            OrderStatus   @default(PENDING)
+  notes             String?
+  estimatedDelivery DateTime?
+  items             OrderItem[]
+  payment           Payment?
+  customOrder       CustomOrder?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id])
+  name      String
+  quantity  Int
+  unitPrice Decimal  @db.Decimal(10, 2)
+  createdAt DateTime @default(now())
+}
+
+model CustomOrder {
+  id              String         @id @default(cuid())
+  orderId         String         @unique
+  order           Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  firstName       String
+  lastName        String
+  email           String
+  phone           String?
+  drawingType     DrawingType
+  format          DrawingFormat
+  support         ProductSupport
+  peopleCount     Int
+  description     String
+  referenceImages String[]
+  desiredDate     DateTime?
+  shippingAddress String?
+  totalPrice      Decimal        @db.Decimal(10, 2)
+  status          OrderStatus    @default(PENDING)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model GalleryImage {
+  id         String    @id @default(cuid())
+  url        String
+  altText    String
+  width      Int?
+  height     Int?
+  sortOrder  Int       @default(0)
+  artworkId  String?
+  artwork    Artwork?  @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+  createdAt  DateTime  @default(now())
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  authorName String
+  authorCity String?
+  rating     Int
+  content    String
+  published  Boolean  @default(true)
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
+}
+
+model Payment {
+  id                    String        @id @default(cuid())
+  orderId               String        @unique
+  order                 Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  provider              String        @default("stripe")
+  stripePaymentIntentId String?
+  amount                Decimal       @db.Decimal(10, 2)
+  currency              String        @default("eur")
+  status                PaymentStatus @default(PENDING)
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+}
+
