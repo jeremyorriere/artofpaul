@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { PrismaClient } from "@prisma/client";
 import { integrations } from "@/lib/env";
 
 type PrismaClientLike = {
@@ -12,12 +13,7 @@ declare global {
 }
 
 function createPrismaClient(): PrismaClientLike | null {
-  const runtimeRequire = eval("require") as (id: string) => {
-    PrismaClient?: new (options?: { log?: string[] }) => PrismaClientLike;
-  };
-  const { PrismaClient } = runtimeRequire("@prisma/client");
-
-  return PrismaClient ? new PrismaClient({ log: ["error", "warn"] }) : null;
+  return new PrismaClient({ log: ["error", "warn"] }) as unknown as PrismaClientLike;
 }
 
 export const prisma = integrations.databaseEnabled
