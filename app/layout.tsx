@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Caveat_Brush, Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { Providers } from "@/components/providers";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -66,6 +67,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <SiteFooter />
           </div>
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
