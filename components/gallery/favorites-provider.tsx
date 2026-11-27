@@ -13,15 +13,18 @@ const STORAGE_KEY = "artofpaul-favorites";
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [hasLoadedFavorites, setHasLoadedFavorites] = useState(false);
 
   useEffect(() => {
     const saved = window.localStorage.getItem(STORAGE_KEY);
     if (saved) setFavorites(JSON.parse(saved));
+    setHasLoadedFavorites(true);
   }, []);
 
   useEffect(() => {
+    if (!hasLoadedFavorites) return;
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
-  }, [favorites]);
+  }, [favorites, hasLoadedFavorites]);
 
   const value = useMemo(
     () => ({
@@ -48,4 +51,3 @@ export function useFavorites() {
   }
   return context;
 }
-

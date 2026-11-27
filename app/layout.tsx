@@ -23,6 +23,10 @@ export const metadata: Metadata = {
   },
   description:
     "Atelier d'illustration sur mesure : portraits, animaux, paysages, manga et créations premium avec paiement en ligne et suivi de commande.",
+  icons: {
+    icon: "/images/profil.jpg",
+    apple: "/images/profil.jpg",
+  },
   openGraph: {
     title: "Art of Paul | Dessins sur commande haut de gamme",
     description:
@@ -47,7 +51,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="fr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-[#f8f5ef] text-stone-900">
+      <body className="min-h-full bg-[#f7f4ec] text-stone-900">
         <Providers>
           <div className="relative flex min-h-full flex-col overflow-x-hidden">
             <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-130 bg-[radial-gradient(circle_at_top,#fde68a_0%,rgba(255,255,255,0)_48%)]" />

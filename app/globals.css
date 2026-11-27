@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8f5ef;
-  --foreground: #1c1917;
+  --background: #f7f4ec;
+  --foreground: #292524;
   --muted: #78716c;
-  --card: #ffffff;
+  --card: #fffdf8;
 }
 
 @theme inline {
@@ -35,8 +35,8 @@ a {
 }
 
 ::selection {
-  background: #fed7aa;
-  color: #1c1917;
+  background: #f5b04c;
+  color: #292524;
 }
 
 .glass-panel {
@@ -140,4 +140,3 @@ a {
 .dialog-content[data-state="closed"] {
   animation: dialog-content-out 180ms ease-in;
 }
-

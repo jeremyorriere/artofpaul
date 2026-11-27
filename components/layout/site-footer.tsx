@@ -1,5 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Instagram, Mail, Palette } from "lucide-react";
+import { Instagram, Mail } from "lucide-react";
 import { Container } from "@/components/layout/container";
 
 export function SiteFooter() {
@@ -8,16 +9,16 @@ export function SiteFooter() {
       <Container className="grid gap-10 py-12 md:grid-cols-3">
         <div className="space-y-4">
           <div className="flex items-center gap-3 text-white">
-            <div className="flex size-10 items-center justify-center rounded-full bg-white/10">
-              <Palette className="size-5" />
+            <div className="relative size-10 overflow-hidden rounded-full border border-white/30 bg-white/10">
+              <Image src="/images/profil.jpg" alt="" fill sizes="40px" className="object-cover" />
             </div>
             <div>
               <p className="text-sm uppercase tracking-[0.35em] text-stone-400">Art of Paul</p>
-              <p className="text-lg font-semibold">Dessins sur commande</p>
+              <p className="text-lg font-semibold">Illustration & bande dessinée</p>
             </div>
           </div>
           <p className="max-w-sm text-sm leading-6 text-stone-400">
-            Un atelier haut de gamme pour transformer vos souvenirs, passions et univers en œuvres sensibles.
+            Des personnages, des histoires et des dessins faits avec soin, du premier croquis à la dernière case.
           </p>
         </div>
 
@@ -37,7 +38,7 @@ export function SiteFooter() {
             <a href="mailto:contact@artofpaul.fr" className="flex items-center gap-2 hover:text-white">
               <Mail className="size-4" /> contact@artofpaul.fr
             </a>
-            <a href="https://instagram.com" className="flex items-center gap-2 hover:text-white">
+            <a href="https://www.instagram.com/art_ofpaul/" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white">
               <Instagram className="size-4" /> Instagram atelier
             </a>
             <p>Délais moyens : 10 à 21 jours</p>
@@ -47,4 +48,3 @@ export function SiteFooter() {
     </footer>
   );
 }
-
