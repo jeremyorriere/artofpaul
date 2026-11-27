@@ -14,6 +14,17 @@
   --color-card: var(--card);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-hand), "Comic Sans MS", cursive;
+  --color-sky: #8fc3e3;
+  --color-meadow: #8aa84a;
+  --color-fox: #d9622b;
+  --color-ink: #14161c;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: 0.01em;
 }
 
 * {
